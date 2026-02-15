@@ -61,7 +61,7 @@ dia_semana = hoje.weekday()  # 0=seg, 6=dom
 # PROCESSAMENTO
 # ==================================================
 
-if dia_semana <= 5:  # Segunda a sexta
+if dia_semana <= 6:  # Segunda a sexta
     for i, linha in enumerate(dados, start=2):
 
         nome = linha.get("Nome", "").strip()
@@ -109,10 +109,9 @@ if dia_semana <= 5:  # Segunda a sexta
         )
 
         # Atualiza planilha
-        sheet.update_cell(i, 6, "realizada")  # Status
-        sheet.update_cell(i, 7, hoje.strftime("%d/%m/%Y"))  # Data da última entrevista
+        sheet.update_cell(i, 6, "avisado")  # Status
 
-        print(f"Mensagem enviada para: {nome}")
+        print(f"Mensagem da família {nome} enviada")
 
 else:
     print("Fim de semana — nenhuma mensagem enviada.")

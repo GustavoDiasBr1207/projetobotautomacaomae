@@ -1,18 +1,29 @@
+import os
 import gspread
+from dotenv import load_dotenv
 from oauth2client.service_account import ServiceAccountCredentials
 
 # ======================================
-# CONFIGURAÇÕES
+# CARREGA .env
 # ======================================
+load_dotenv()
 
-NOME_PLANILHA = "Planilha Moradores"
-ABA = "Página1"
-CAMINHO_CREDENCIAIS = "credenciais.json"
+# ======================================
+# VARIÁVEIS DE AMBIENTE
+# ======================================
+NOME_PLANILHA = os.getenv("NOME_PLANILHA")
+ABA = os.getenv("ABA_PLANILHA")
+CAMINHO_CREDENCIAIS = os.getenv("CAMINHO_CREDENCIAIS")
+
+print("🔎 Variáveis carregadas:")
+print("Planilha:", NOME_PLANILHA)
+print("Aba:", ABA)
+print("Credenciais:", CAMINHO_CREDENCIAIS)
+print("-" * 40)
 
 # ======================================
 # AUTENTICAÇÃO GOOGLE
 # ======================================
-
 scope = [
     "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive"
@@ -27,17 +38,22 @@ client = gspread.authorize(creds)
 # ======================================
 # ABRIR PLANILHA
 # ======================================
+planilha = client.open(NOME_PLANILHA)
 
-sheet = client.open(NOME_PLANILHA).worksheet(ABA)
+print("📄 Abas encontradas na planilha:")
+for aba in planilha.worksheets():
+    print(f"- '{aba.title}'")
 
+print("-" * 40)
+
+sheet = planilha.worksheet(ABA)
 dados = sheet.get_all_records()
 
 # ======================================
-# TESTE
+# TESTE FINAL
 # ======================================
-
 print("✅ Conexão OK!")
-print("📄 Dados encontrados na planilha:\n")
+print(f"📊 Total de registros: {len(dados)}\n")
 
-for linha in dados:
-    print(linha)
+for i, linha in enumerate(dados, start=1):
+    print(f"Linha {i}: {linha}")
